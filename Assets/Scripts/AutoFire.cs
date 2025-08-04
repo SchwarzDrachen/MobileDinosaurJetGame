@@ -7,12 +7,13 @@ public class AutoFire : MonoBehaviour
     [SerializeField] Rigidbody rockPrefab;
     [SerializeField] float shootingInterval = 1.0f;
     [SerializeField] private float travelSpeed = 5.0f;
-    public Transform shootingPoint;
+    [SerializeField] private Transform[] shootingPoint;
     private float timer;
 
     void Start()
     {
         timer = shootingInterval;
+        Physics.IgnoreCollision(rockPrefab.GetComponent<Collider>(), GetComponent<Collider>());
     }
 
     void Update()
@@ -27,7 +28,18 @@ public class AutoFire : MonoBehaviour
 
     private void Shoot()
     {
-        Rigidbody rockClone = Instantiate(rockPrefab, shootingPoint.position, shootingPoint.rotation);
-        rockClone.velocity = transform.up * travelSpeed;
+        if (shootingPoint.Length > 0)
+        {
+            Rigidbody rockClone = Instantiate(rockPrefab, shootingPoint[0].position, shootingPoint[0].rotation);
+            rockClone.velocity = transform.up * travelSpeed;
+        }
+        else
+        {
+            for (int i = 0; i <= shootingPoint.Length; i++)
+            {
+                Rigidbody rockClone = Instantiate(rockPrefab, shootingPoint[i].position, shootingPoint[i].rotation);
+                rockClone.velocity = transform.up * travelSpeed;
+            }
+        }
     }
 }
