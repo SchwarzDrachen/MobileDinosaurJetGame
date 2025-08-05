@@ -7,16 +7,18 @@ public class WaveSpawner : MonoBehaviour
     [SerializeField] GameObject[] enemyPrefabs;
     [SerializeField] GameObject enemyPrefabBoss;
     private int enemyCount;
-    [SerializeField]  public int waveNumber;
+    [SerializeField] private int waveNumber;
     [SerializeField] float timeBetweenEnemySpawn;
     [SerializeField] float timeBetweenWaves;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] Transform bossSpawnPoint;
-    public bool spawnWave;
+    bool spawnWave;
+
+
     void Start()
     {
-        StopCoroutine(SpawnWave(waveNumber));
         StartCoroutine(SpawnWave(waveNumber));
+        Debug.Log("Wave Starting");
     }
 
     void Update()
@@ -25,7 +27,7 @@ public class WaveSpawner : MonoBehaviour
 
         if (enemyCount == 0 && !spawnWave)
         {
-            StopCoroutine(SpawnWave(waveNumber));
+            Debug.Log("New Wave");
             waveNumber++;
             StartCoroutine(SpawnWave(waveNumber));
         }
@@ -36,15 +38,16 @@ public class WaveSpawner : MonoBehaviour
     }
 
     IEnumerator SpawnWave(int enemiesToSpawn) {
-        GameObject enemyToSpawn;
+        Debug.Log("Spawning Wave");
         spawnWave = true;
         yield return new WaitForSeconds(timeBetweenWaves);
         if (enemiesToSpawn != 6)
         {
             for (int i = 0; i < enemiesToSpawn; i++)
             {
-                enemyToSpawn = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
-                Instantiate(enemyToSpawn, spawnPoints[Random.Range(0, spawnPoints.Length)].position, enemyToSpawn.transform.rotation);
+                Debug.Log("Enemy Spawning");
+                enemyPrefabs[i] = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
+                Instantiate(enemyPrefabs[i], spawnPoints[Random.Range(0, spawnPoints.Length)].position, enemyPrefabs[i].transform.rotation);
                 yield return new WaitForSeconds(timeBetweenEnemySpawn);
             }
         }
